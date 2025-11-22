@@ -274,7 +274,8 @@ func (ddr *datadogReceiver) handleInfo(w http.ResponseWriter, _ *http.Request, i
 
 func (ddr *datadogReceiver) handleLogs(w http.ResponseWriter, req *http.Request) {
 	if req.ContentLength == 0 { // Ping mechanism of Datadog SDK perform http request with empty body when GET /info not implemented.
-		http.Error(w, "Fake featuresdiscovery", http.StatusBadRequest) // The response code should be different of 404 to be considered ok by Datadog SDK.
+		// Send "ok" with status code 200
+		_, _ = w.Write([]byte("ok"))
 		return
 	}
 	obsCtx := ddr.tReceiver.StartLogsOp(req.Context())
